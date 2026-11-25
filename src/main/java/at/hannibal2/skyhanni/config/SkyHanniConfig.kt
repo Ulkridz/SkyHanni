@@ -32,6 +32,10 @@ import io.github.notenoughupdates.moulconfig.gui.HorizontalAlign
 import io.github.notenoughupdates.moulconfig.processor.ProcessedCategory
 
 class SkyHanniConfig : Config() {
+    @Expose
+    //~ if < 26.3 'Int = 1' -> 'Int = 0'
+    var inputBindingVersion: Int = 1
+
     private val discord = MyResourceLocation("skyhanni", "social/discord.png")
     private val github = MyResourceLocation("skyhanni", "social/github.png")
     private val patreon = MyResourceLocation("skyhanni", "social/patreon.png")

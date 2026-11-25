@@ -88,7 +88,7 @@ class GuiOptionEditorUpdateCheck(option: ProcessedOption) : GuiOptionEditor(opti
         mouseEvent: MouseEvent,
     ): Boolean {
         val event = mouseEvent as? MouseEvent.Click ?: return false
-        if (event.mouseButton != 0) return false
+        if (event.mouseButton != com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT) return false
 
         fun isInside(width: Int, height: Int, def: GuiElementButton): Boolean {
             val inX = (mouseX - width - x) in (0..def.width)

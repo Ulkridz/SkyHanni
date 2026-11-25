@@ -40,7 +40,7 @@ abstract class SkyHanniBaseScreen(title: Component = Component.empty()) : Screen
     open fun onDrawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {}
 
     override fun mouseClicked(click: MouseButtonEvent, doubled: Boolean): Boolean {
-        postMouseClicked(click.x.toInt(), click.y.toInt(), click.button())
+        postMouseClicked(click.x.toInt(), click.y.toInt(), InputCompat.mouseBinding(click.button()))
         postHandleMouseInput()
         return super.mouseClicked(click, doubled)
     }
@@ -76,7 +76,7 @@ abstract class SkyHanniBaseScreen(title: Component = Component.empty()) : Screen
     open fun onKeyTyped(typedChar: Char?, keyCode: Int?) {}
 
     override fun mouseReleased(click: MouseButtonEvent): Boolean {
-        postMouseReleased(click.x.toInt(), click.y.toInt(), click.button())
+        postMouseReleased(click.x.toInt(), click.y.toInt(), InputCompat.mouseBinding(click.button()))
         postHandleMouseInput()
         return super.mouseReleased(click)
     }
@@ -93,7 +93,7 @@ abstract class SkyHanniBaseScreen(title: Component = Component.empty()) : Screen
 
     override fun mouseDragged(click: MouseButtonEvent, mouseX: Double, mouseY: Double): Boolean {
         // TODO idk if mouseX is correct or if it should be click.x
-        postMouseClickMove(mouseX.toInt(), mouseY.toInt(), click.button(), 0L)
+        postMouseClickMove(click.x.toInt(), click.y.toInt(), InputCompat.mouseBinding(click.button()), 0L)
         postHandleMouseInput()
         return super.mouseDragged(click, mouseX, mouseY)
     }

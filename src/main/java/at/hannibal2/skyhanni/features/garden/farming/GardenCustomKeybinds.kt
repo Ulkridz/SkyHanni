@@ -36,7 +36,7 @@ object GardenCustomKeybinds {
     fun isKeyDown(keyBinding: KeyMapping, isDown: Boolean, cir: CallbackInfoReturnable<Boolean>) {
         if (!updateActiveState()) return
         val override = map[keyBinding] ?: run {
-            if (map.containsValue(keyBinding.key.value)) {
+            if (map.containsValue(at.hannibal2.skyhanni.utils.compat.InputCompat.binding(keyBinding.key))) {
                 cir.returnValue = false
             }
             return
@@ -53,7 +53,7 @@ object GardenCustomKeybinds {
     fun isKeyPressed(keyBinding: KeyMapping, cir: CallbackInfoReturnable<Boolean>) {
         if (!updateActiveState()) return
         val override = map[keyBinding] ?: run {
-            if (map.containsValue(keyBinding.key.value)) {
+            if (map.containsValue(at.hannibal2.skyhanni.utils.compat.InputCompat.binding(keyBinding.key))) {
                 cir.returnValue = false
             }
             return
@@ -128,7 +128,7 @@ object GardenCustomKeybinds {
         this is ToggleKeyMapping && needsToggle.asBoolean
 
     private fun KeyMapping.isRemappedFrom(override: Int): Boolean =
-        key.value != override
+        at.hannibal2.skyhanni.utils.compat.InputCompat.binding(key) != override
 
     private fun KeyMapping.updateToggleState(override: Int, isDown: Boolean): Boolean {
         if (!override.isKeyHeld()) {

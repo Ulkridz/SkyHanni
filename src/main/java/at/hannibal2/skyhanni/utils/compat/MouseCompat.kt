@@ -2,6 +2,7 @@ package at.hannibal2.skyhanni.utils.compat
 
 import at.hannibal2.skyhanni.events.minecraft.KeyDownEvent
 import at.hannibal2.skyhanni.events.minecraft.KeyPressEvent
+import at.hannibal2.skyhanni.events.minecraft.KeyUpEvent
 import at.hannibal2.skyhanni.utils.DelayedRun
 import net.minecraft.client.Minecraft
 import net.minecraft.client.input.MouseButtonInfo
@@ -13,7 +14,7 @@ import kotlin.math.sign
  */
 object MouseCompat {
 
-    const val NUMBER_OF_MOUSE_BUTTONS = 6
+    const val NUMBER_OF_MOUSE_BUTTONS = 9
 
     @JvmStatic
     var deltaMouseX = 0.0
@@ -40,12 +41,12 @@ object MouseCompat {
     private val mouse by lazy { Minecraft.getInstance().mouseHandler }
 
     fun isButtonDown(button: Int): Boolean {
-        if (button in 0..5) return buttonStates[button]
+        if (button in buttonStates.indices) return buttonStates[button]
         return false
     }
 
     fun setButtonState(button: Int, down: Boolean) {
-        if (button in 0..5) {
+        if (button in buttonStates.indices) {
             buttonStates[button] = down
         }
     }
@@ -85,15 +86,14 @@ object MouseCompat {
     @JvmStatic
     fun handleMouseButton(input: MouseButtonInfo, action: Int) {
         val button: Int = input.button()
+        val binding = InputCompat.mouseBinding(button)
         if (action == 1) {
             setButtonState(button, true)
-            KeyDownEvent(button).post()
-            KeyPressEvent(button).post()
+            KeyDownEvent(binding).post()
+            KeyPressEvent(binding).post()
         } else {
-            KeyPressEvent(button).post()
-            DelayedRun.runNextTickEnd {
-                setButtonState(button, false)
-            }
+            setButtonState(button, false)
+            KeyUpEvent(binding).post()
         }
     }
 }

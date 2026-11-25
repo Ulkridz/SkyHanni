@@ -22,7 +22,7 @@ public abstract class MixinKeyboardHandler {
     private void onKey(long window, int action, KeyEvent input, CallbackInfo ci) {
         int key = input.key();
         if (Minecraft.getInstance().player == null) return;
-        if (key == GLFW.GLFW_KEY_UNKNOWN) return;
+        if (key == com.mojang.blaze3d.platform.InputConstants.UNKNOWN.getValue()) return;
         //System.out.println("Key: " + key + " Scancode: " + scancode + " Action: " + action + " Modifiers: " + modifiers);
 
         // Don't send key events if REI search bar is selected

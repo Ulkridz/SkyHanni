@@ -85,6 +85,7 @@ class GuiOptionEditorUpdateCheckTest {
         width = EDITOR_WIDTH,
         mouseX = mouseX,
         mouseY = mouseY,
+        //~ if >= 26.3 'mouseButton = 0' -> 'mouseButton = 1'
         mouseEvent = MouseEvent.Click(mouseButton = 0, mouseState = mouseDown),
     )
 

@@ -8,6 +8,7 @@ import at.hannibal2.skyhanni.events.render.gui.GuiScreenOpenEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.compat.MouseCompat
+import at.hannibal2.skyhanni.utils.compat.InputCompat
 import com.mojang.blaze3d.platform.InputConstants
 import io.github.notenoughupdates.moulconfig.common.IMinecraft
 import net.minecraft.client.KeyMapping
@@ -29,9 +30,15 @@ object KeyboardManager {
         if (GLFW.GLFW_KEY_KP_ENTER.isKeyHeld()) lockedKeys.add(GLFW.GLFW_KEY_KP_ENTER)
     }
 
+    //? if >= 26.3 {
+    /*const val LEFT_MOUSE = InputCompat.MOUSE_OFFSET + InputConstants.MOUSE_BUTTON_LEFT
+    const val RIGHT_MOUSE = InputCompat.MOUSE_OFFSET + InputConstants.MOUSE_BUTTON_RIGHT
+    const val MIDDLE_MOUSE = InputCompat.MOUSE_OFFSET + InputConstants.MOUSE_BUTTON_MIDDLE
+    *///?} else {
     const val LEFT_MOUSE = GLFW.GLFW_MOUSE_BUTTON_LEFT
     const val RIGHT_MOUSE = GLFW.GLFW_MOUSE_BUTTON_RIGHT
     const val MIDDLE_MOUSE = GLFW.GLFW_MOUSE_BUTTON_MIDDLE
+    //?}
 
     /**
      * Represents whether either the left or right Super key (also known as Windows key) is down.
@@ -120,7 +127,7 @@ object KeyboardManager {
     // and in renderable calls have time to react first, and lock this key press event properly.
     fun KeyMapping.isActive(): Boolean {
         try {
-            if (key.value.isKeyHeld()) return true
+            if (InputCompat.binding(key).isKeyHeld()) return true
         } catch (e: IndexOutOfBoundsException) {
             ErrorManager.logErrorWithData(
                 e,
@@ -138,7 +145,7 @@ object KeyboardManager {
         )
 
         this == -1 -> false
-        this in 0..5 -> MouseCompat.isButtonDown(this)
+        InputCompat.mouseButton(this) != null -> MouseCompat.isButtonDown(InputCompat.mouseButton(this)!!)
         //? if >= 26.3 {
         /*else -> InputConstants.isKeyDown(this)
         *///?} else {
@@ -160,7 +167,16 @@ object KeyboardManager {
         false
     }
 
-    fun getKeyName(keyCode: Int): String = IMinecraft.INSTANCE.getKeyName(keyCode).text
+    fun getKeyName(keyCode: Int): String {
+        //? if >= 26.3 {
+        /*if (keyCode == -1) return "NONE"
+        val mouse = InputCompat.mouseButton(keyCode)
+        val type = if (mouse != null) InputConstants.Type.MOUSE else InputConstants.Type.KEYBOARD
+        return type.getOrCreate(mouse ?: keyCode).displayName.string
+        *///?} else {
+        return IMinecraft.INSTANCE.getKeyName(keyCode).text
+        //?}
+    }
 
     object WasdInputMatrix {
         val w get() = Minecraft.getInstance().options.keyUp

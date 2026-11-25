@@ -308,7 +308,7 @@ object GraphEditorInput {
     }
 
     private fun KeyMapping.handleEditClicks(vector: LorenzVec) {
-        if (!this.key.value.isKeyClicked()) return
+        if (!at.hannibal2.skyhanni.utils.compat.InputCompat.binding(this.key).isKeyClicked()) return
         GraphEditorHistory.save("moved node")
         state.activeNode?.let {
             it.position += vector

@@ -147,6 +147,9 @@ tasks.register<ArgFileClientProductionRunTask>("prodClient") {
     notCompatibleWithConfigurationCache("Interactive client launches must start a new process every time.")
     outputs.upToDateWhen { false }
     runDir = file("run")
+    // Exercise the distributable, including shaded libraries, rather than the nodeps jar.
+    mods.setFrom(tasks.named("shadowJar"), configurations.named("productionRuntimeMods"))
+    jvmArgs.addAll("-Xmx3G", "-Ddevauth.enabled=false")
 }
 
 if (target == primaryTarget) {
@@ -187,6 +190,7 @@ dependencies {
     "productionRuntimeMods"(libs.fabricLanguageKotlin)
 
     implementation("maven.modrinth:modmenu:${target.modMenuVersion}")
+    "productionRuntimeMods"("maven.modrinth:modmenu:${target.modMenuVersion}")
 
     runtimeOnly(libs.devauth)
     "productionRuntimeMods"(libs.devauth)
@@ -441,6 +445,7 @@ tasks.withType<GradleJar> {
 }
 
 tasks.shadowJar {
+    if (target.minecraftVersion.versionName == "26.3") archiveFileName.set("SkyHanni-$version.jar")
     destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
     archiveClassifier.set("")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

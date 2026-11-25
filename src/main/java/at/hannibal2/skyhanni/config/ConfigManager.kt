@@ -159,6 +159,8 @@ class ConfigManager {
                 output = if (fileType == ConfigFileType.FEATURES) {
                     val jsonObject = lenientGson.fromJson(text, com.google.gson.JsonObject::class.java)
                     val newJsonObject = ConfigUpdaterMigrator.fixConfig(jsonObject)
+                    //? if >= 26.3
+                    //InputBindingMigration.migrate(newJsonObject)
                     val run = { lenientGson.fromJson(newJsonObject, defaultValue.javaClass) }
                     if (PlatformUtils.isDevEnvironment) {
                         try {
@@ -315,7 +317,12 @@ class BlockingMoulConfigProcessor : MoulConfigProcessor<SkyHanniConfig>(SkyHanni
         field: Field,
         option: ConfigOption,
     ): GuiOptionEditor? {
-        val default = super.createOptionGui(processedOption, field, option) ?: return null
+        var default = super.createOptionGui(processedOption, field, option) ?: return null
+        //? if >= 26.3 {
+        /*field.getAnnotation(io.github.notenoughupdates.moulconfig.annotations.ConfigEditorKeybind::class.java)?.let {
+            default = GuiOptionEditorInputBinding(processedOption, it.defaultKey)
+        }
+        *///?}
         if (processedOption !is ProcessedOptionImpl) return default
         var extraPath = ""
         val categoryParent = processedOption.category.parentCategoryId
