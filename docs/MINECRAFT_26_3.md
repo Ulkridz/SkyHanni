@@ -15,7 +15,7 @@ Render Chest 2.0.0-beta.2+26.3 is bundled. MoulConfig 4.8.0 is shaded.
 
 ## Validation and scope
 
-`:26.3:build` passes all 138 tests (including mouse-button regression tests), including the Fabric mixin audit,
+`:26.3:build` passes all 141 tests (including mouse-button and price-tooltip regression tests), including the Fabric mixin audit,
 and validates the class tweaker. No tests or mod modules were excluded to
 make this build pass. All 993 SkyHanni modules are generated.
 
@@ -25,6 +25,16 @@ key bindings have not been migrated from GLFW to SDL. SDL scancodes overlap
 some mouse-button values in the inherited combined input representation;
 keyboard/mouse binding behavior needs a separate runtime compatibility pass.
 The custom shaders and item rendering also require in-game visual testing.
+
+## Item tooltip prices
+
+Market prices are enabled by default under Estimated Item Value → Market Prices on Tooltip.
+Tooltips show Bazaar instant buy/sell, Lowest BIN for non-Bazaar items, and NPC sell prices
+when available, with stack totals for multiple items. Missing or invalid prices are omitted.
+These use the existing background price caches; no network requests run while rendering tooltips.
+The separate Show on Tooltip setting still controls the estimated value including upgrades.
+The generic market price lines were previously absent, and estimated values deliberately
+omitted items without upgrades. Price rendering still needs verification in a live SkyBlock session.
 
 API references used for the port:
 

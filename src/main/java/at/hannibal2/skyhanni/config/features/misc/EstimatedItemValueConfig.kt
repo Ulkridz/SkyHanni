@@ -27,6 +27,12 @@ class EstimatedItemValueConfig {
     var showTooltip: Boolean = false
 
     @Expose
+    @ConfigOption(name = "Market Prices on Tooltip", desc = "Show Bazaar buy/sell, Lowest BIN and NPC prices at the bottom of item tooltips. Includes stack totals.")
+    @ConfigEditorBoolean
+    @FeatureToggle
+    var showMarketPrices: Boolean = true
+
+    @Expose
     @ConfigOption(name = "Hotkey", desc = "Press this key to show the Estimated Item Value.")
     @ConfigEditorKeybind(defaultKey = GLFW.GLFW_KEY_UNKNOWN)
     var hotkey: Int = GLFW.GLFW_KEY_UNKNOWN
