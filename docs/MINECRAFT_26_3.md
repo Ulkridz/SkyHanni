@@ -15,7 +15,7 @@ Render Chest 2.0.0-beta.2+26.3 is bundled. MoulConfig 4.8.0 is shaded.
 
 ## Validation and scope
 
-`:26.3:build` passes all 150 tests (including input migration, price-tooltip and command-completion regression tests), including the Fabric mixin audit,
+`:26.3:build` passes all 152 tests (including input migration, Bazaar loading, price-tooltip and command-completion regression tests), including the Fabric mixin audit,
 and validates the class tweaker. No tests or mod modules were excluded to
 make this build pass. All 993 SkyHanni modules are generated.
 
@@ -51,6 +51,12 @@ Market prices are enabled by default under Estimated Item Value → Market Price
 Tooltips show Bazaar instant buy/sell, Lowest BIN for non-Bazaar items, and NPC sell prices
 when available, with stack totals for multiple items. Missing or invalid prices are omitted.
 These use the existing background price caches; no network requests run while rendering tooltips.
+Bazaar cache loading no longer discards products when NEU cannot create their ItemStacks.
+Names fall back to API IDs while NEU loads. Valid order books survive an empty quick status;
+an empty response does not overwrite an existing cache or report a successful update.
+`/shupdatebazaarprices` reports the loaded product count. Tests cover API JSON parsing through
+tooltip line creation without a running Minecraft client or loaded NEU items. The reported
+missing-Bazaar-only symptom still requires confirmation with the updated jar in Lunar.
 The separate Show on Tooltip setting still controls the estimated value including upgrades.
 The generic market price lines were previously absent, and estimated values deliberately
 omitted items without upgrades. Price rendering still needs verification in a live SkyBlock session.
