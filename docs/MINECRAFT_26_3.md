@@ -15,7 +15,7 @@ Render Chest 2.0.0-beta.2+26.3 is bundled. MoulConfig 4.8.0 is shaded.
 
 ## Validation and scope
 
-`:26.3:build` passes all 135 existing tests, including the Fabric mixin audit,
+`:26.3:build` passes all 138 tests (including mouse-button regression tests), including the Fabric mixin audit,
 and validates the class tweaker. No tests or mod modules were excluded to
 make this build pass. All 993 SkyHanni modules are generated.
 

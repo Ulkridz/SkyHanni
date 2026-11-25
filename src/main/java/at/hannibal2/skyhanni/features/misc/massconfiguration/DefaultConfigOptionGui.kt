@@ -49,7 +49,7 @@ class DefaultConfigOptionGui(
         GuiRenderUtils.drawFloatingRectDark((width - xSize) / 2, (height - ySize) / 2, xSize, ySize)
         var hoveringTextToDraw: List<String>? = null
         val x = mouseX - ((width - xSize) / 2) - padding
-        val isMouseDown = MouseCompat.isButtonDown(0)
+        val isMouseDown = MouseCompat.isButtonDown(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT)
         val shouldClick = isMouseDown && !wasMouseDown
         wasMouseDown = isMouseDown
         val isMouseInScrollArea =

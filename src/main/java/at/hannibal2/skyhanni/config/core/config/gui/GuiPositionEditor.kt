@@ -181,9 +181,9 @@ class GuiPositionEditor(
                 val (mouseX, mouseY) = GuiScreenUtils.mousePos
 
                 when (mouseButton) {
-                    1 -> position.jumpToConfigOptions()
-                    2 -> if (config.keyBindReset == KeyboardManager.MIDDLE_MOUSE) position.resetPositionAndScale()
-                    0 -> if (!position.clicked) {
+                    KeyboardManager.RIGHT_MOUSE -> position.jumpToConfigOptions()
+                    KeyboardManager.MIDDLE_MOUSE -> if (config.keyBindReset == KeyboardManager.MIDDLE_MOUSE) position.resetPositionAndScale()
+                    KeyboardManager.LEFT_MOUSE -> if (!position.clicked) {
                         clickedPos = i
                         position.clicked = true
                         grabbedX = mouseX

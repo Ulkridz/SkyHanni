@@ -121,7 +121,7 @@ object PetDisplayConfigGuiManager {
         var position = (previewPosition ?: PreviewPosition(defaultLeft, defaultTop))
             .clamped(paneWidth, paneHeight, screenWidth, screenHeight)
         val (mouseX, mouseY) = GuiScreenUtils.mousePos
-        val isMouseDown = MouseCompat.isButtonDown(0)
+        val isMouseDown = MouseCompat.isButtonDown(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT)
         val isHeaderHovered = mouseX in position.left..(position.left + paneWidth) &&
             mouseY in position.top..(position.top + INNER_PAD + LABEL_HEIGHT)
 

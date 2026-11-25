@@ -49,7 +49,7 @@ class ChatHistoryGui(private val history: List<ChatManager.MessageFilteringResul
             DrawContextUtils.translate(l + 0.0, t + 0.0)
             DrawContextUtils.translate(5.0, 5.0 - scroll)
             val offsetMouseX = mouseX - l
-            val isMouseButtonDown = offsetMouseX in 0..w && mouseY in t..(t + h) && MouseCompat.isButtonDown(0)
+            val isMouseButtonDown = offsetMouseX in 0..w && mouseY in t..(t + h) && MouseCompat.isButtonDown(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT)
             var offsetMouseY = mouseY - (t - scroll).toInt() - 5
 
             for (msg in history) {

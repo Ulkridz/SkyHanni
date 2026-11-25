@@ -13,7 +13,7 @@ public abstract class MixinChatScreen {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void mouseClicked(MouseButtonEvent click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
-       if (click.button() != 1) return;
+       if (!CopyChat.isCopyButton(click.button())) return;
        CopyChat.handleCopyChat((int) click.x(), (int) click.y());
     }
 }

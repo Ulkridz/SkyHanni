@@ -11,6 +11,7 @@ import at.hannibal2.skyhanni.utils.StringUtils.stripHypixelMessage
 import at.hannibal2.skyhanni.utils.compat.MinecraftCompat
 import at.hannibal2.skyhanni.utils.compat.OrderedTextUtils
 import at.hannibal2.skyhanni.utils.compat.formattedTextCompat
+import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ActiveTextCollector
 import net.minecraft.client.gui.Font
@@ -24,6 +25,9 @@ import org.joml.Matrix3x2f
 
 object CopyChat {
     private val config get() = SkyHanniMod.feature.chat.copyChat
+
+    @JvmStatic
+    fun isCopyButton(button: Int): Boolean = button == InputConstants.MOUSE_BUTTON_RIGHT
 
     @JvmStatic
     fun handleCopyChat(mouseX: Int, mouseY: Int) {
