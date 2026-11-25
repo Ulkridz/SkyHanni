@@ -2,7 +2,6 @@ package at.hannibal2.skyhanni.data.bazaar
 
 import at.hannibal2.skyhanni.SkyHanniMod
 import at.hannibal2.skyhanni.SkyHanniMod.launch
-import at.hannibal2.skyhanni.api.enoughupdates.EnoughUpdatesManager
 import at.hannibal2.skyhanni.api.event.HandleEvent
 import at.hannibal2.skyhanni.config.ConfigManager
 import at.hannibal2.skyhanni.config.commands.CommandCategory
@@ -12,8 +11,10 @@ import at.hannibal2.skyhanni.features.inventory.bazaar.BazaarData
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.ChatUtils
+import at.hannibal2.skyhanni.utils.ItemUtils.repoItemName
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.NeuItems
+import at.hannibal2.skyhanni.utils.NeuItems.getItemStackOrNull
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.SkyBlockUtils
 import at.hannibal2.skyhanni.utils.api.ApiStaticGetPath
@@ -30,12 +31,12 @@ object HypixelBazaarFetcher {
         "https://api.hypixel.net/v2/skyblock/bazaar",
         "Hypixel Bazaar",
     )
+    private val debugConfig get() = SkyHanniMod.feature.dev.debug
 
     private const val HIDDEN_FAILED_ATTEMPTS = 3
 
     private val bazaarFetchCoroutine = CoroutineSettings("bazaar api fetch", timeout = 1.minutes)
 
-    @Volatile
     var latestProductInformation = mapOf<NeuInternalName, BazaarData>()
     private val isFetching = AtomicBoolean(false)
     private var lastSuccessfulFetch = SimpleTimeMark.farPast()
@@ -52,7 +53,6 @@ object HypixelBazaarFetcher {
             "nextFetchIsManual: $nextFetchIsManual",
             "nextFetchTime: ${nextFetchTime.timeUntil()}",
             "lastSuccessfulFetch: ${lastSuccessfulFetch.passedSince()}",
-            "cachedProducts: ${latestProductInformation.size}",
         )
 
         if (failedAttempts == 0) {
@@ -79,13 +79,11 @@ object HypixelBazaarFetcher {
                 ?: return onError(fetchType, Exception("Failed to fetch bazaar data from Hypixel API"))
             val response = ConfigManager.gson.fromJson<BazaarApiResponseJson>(jsonResponse)
             if (response.success) {
-                val prices = process(response.products)
-                check(prices.isNotEmpty()) { "Bazaar returned no usable products; keeping the previous price cache" }
-                latestProductInformation = prices
+                latestProductInformation = process(response.products)
                 failedAttempts = 0
                 lastSuccessfulFetch = SimpleTimeMark.now()
                 if (fetchType == "manual") {
-                    ChatUtils.chat("§aSuccessfully updated the bazaar prices (${prices.size} products).")
+                    ChatUtils.chat("§aSuccessfully updated the bazaar prices.")
                 }
             } else {
                 val rawResponse = jsonResponse.toString()
@@ -98,22 +96,24 @@ object HypixelBazaarFetcher {
         }
     }
 
-    internal fun process(
-        products: Map<String, BazaarProduct>,
-        resolveId: (String) -> NeuInternalName = NeuItems::transHypixelNameToInternalName,
-        resolveName: (NeuInternalName) -> String = { EnoughUpdatesManager.getItemById(it)?.displayName ?: it.asString() },
-    ) = products.mapNotNull { (key, product) ->
-        if (isUnobtainableBazaarProduct(key)) return@mapNotNull null
-        val internalName = resolveId(key)
+    private fun process(products: Map<String, BazaarProduct>) = products.mapNotNull { (key, product) ->
+        val internalName = NeuItems.transHypixelNameToInternalName(key)
         val instantBuyPrice = product.buySummary.minOfOrNull { it.pricePerUnit } ?: 0.0
         val instantSellPrice = product.sellSummary.maxOfOrNull { it.pricePerUnit } ?: 0.0
 
-        if (product.quickStatus.isEmpty() && instantBuyPrice <= 0 && instantSellPrice <= 0) {
+        if (product.quickStatus.isEmpty()) {
             return@mapNotNull null
         }
 
-        // Prices must not depend on rendering an ItemStack or on NEU finishing its reload.
-        internalName to BazaarData(resolveName(internalName), instantBuyPrice, instantSellPrice, product)
+        if (internalName.getItemStackOrNull() == null) {
+            // Items that exist in Hypixel's Bazaar API, but not in NEU repo (not visible in the ingame bazaar).
+            // Should only include Enchants
+            if (!isUnobtainableBazaarProduct(key) && debugConfig.printMissingBazaarItems) {
+                println("Unknown bazaar product: $key/$internalName")
+            }
+            return@mapNotNull null
+        }
+        internalName to BazaarData(internalName.repoItemName, instantBuyPrice, instantSellPrice, product)
     }.toMap()
 
     private fun isUnobtainableBazaarProduct(key: String): Boolean = when (key) {

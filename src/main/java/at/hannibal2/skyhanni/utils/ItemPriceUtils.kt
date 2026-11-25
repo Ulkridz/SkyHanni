@@ -77,7 +77,7 @@ object ItemPriceUtils {
 
     fun NeuInternalName.isAuctionHouseItem(): Boolean = getLowestBinOrNull() != null
 
-    fun NeuInternalName.getLowestBinOrNull(): Double? = when {
+    private fun NeuInternalName.getLowestBinOrNull(): Double? = when {
         else -> getShLowestBin(this)
     }.takeIf { it != -1L }?.toDouble()
 
