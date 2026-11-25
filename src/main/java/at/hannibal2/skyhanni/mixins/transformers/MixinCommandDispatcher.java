@@ -7,7 +7,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,10 +21,10 @@ public abstract class MixinCommandDispatcher<S> {
     @Inject(method = "getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;", at = @At(value = "INVOKE", target = "Ljava/lang/String;toLowerCase(Ljava/util/Locale;)Ljava/lang/String;"), cancellable = true)
     public void getCompletionSuggestions(ParseResults<S> parse, int cursor, CallbackInfoReturnable<CompletableFuture<Suggestions>> cir, @Local(ordinal = 1) int start, @Local(ordinal = 0) String fullInput, @Local(ordinal = 1) String beforeCursor) {
         if (!beforeCursor.contains(" ")) return;
-        SuggestionsBuilder suggestionsBuilder = buildFromEvent(start, fullInput, beforeCursor, new ArrayList<>());
-        if (suggestionsBuilder == null) return;
+        Suggestions suggestions = buildFromEvent(start, fullInput, beforeCursor, new ArrayList<>());
+        if (suggestions == null) return;
 
-        cir.setReturnValue(suggestionsBuilder.buildFuture());
+        cir.setReturnValue(CompletableFuture.completedFuture(suggestions));
     }
 
     @ModifyReturnValue(method = "getCompletionSuggestions(Lcom/mojang/brigadier/ParseResults;I)Ljava/util/concurrent/CompletableFuture;", at = @At(value = "RETURN"))
@@ -35,26 +34,18 @@ public abstract class MixinCommandDispatcher<S> {
             ArrayList<String> suggestionList = new ArrayList<>(suggestions.getList().stream()
                 .map(Suggestion::getText)
                 .toList());
-            SuggestionsBuilder newSuggestions = buildFromEvent(start, fullInput, beforeCursor, suggestionList);
+            Suggestions newSuggestions = buildFromEvent(start, fullInput, beforeCursor, suggestionList);
             if (newSuggestions == null) {
                 return suggestions;
             }
-            return newSuggestions.build();
+            return newSuggestions;
         });
     }
 
     @Unique
-    private SuggestionsBuilder buildFromEvent(int start, String fullInput, String beforeCursor, ArrayList<String> existing) {
-        TabCompletionEvent tabCompletionEvent = new TabCompletionEvent(fullInput, beforeCursor, existing);
+    private Suggestions buildFromEvent(int start, String fullInput, String beforeCursor, ArrayList<String> existing) {
+        TabCompletionEvent tabCompletionEvent = TabCompletionEvent.fromInput(fullInput, beforeCursor.length(), existing);
         tabCompletionEvent.post();
-        String[] additional = tabCompletionEvent.intoSuggestionArray();
-        if (additional == null) return null;
-
-        SuggestionsBuilder suggestionsBuilder = new SuggestionsBuilder(beforeCursor, start);
-
-        for (String s : additional) {
-            suggestionsBuilder.suggest(s);
-        }
-        return suggestionsBuilder;
+        return tabCompletionEvent.buildSuggestions(start);
     }
 }

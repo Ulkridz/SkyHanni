@@ -15,7 +15,7 @@ Render Chest 2.0.0-beta.2+26.3 is bundled. MoulConfig 4.8.0 is shaded.
 
 ## Validation and scope
 
-`:26.3:build` passes all 141 tests (including mouse-button and price-tooltip regression tests), including the Fabric mixin audit,
+`:26.3:build` passes all 145 tests (including mouse-button, price-tooltip and command-completion regression tests), including the Fabric mixin audit,
 and validates the class tweaker. No tests or mod modules were excluded to
 make this build pass. All 993 SkyHanni modules are generated.
 
@@ -35,6 +35,15 @@ These use the existing background price caches; no network requests run while re
 The separate Show on Tooltip setting still controls the estimated value including upgrades.
 The generic market price lines were previously absent, and estimated values deliberately
 omitted items without upgrades. Price rendering still needs verification in a live SkyBlock session.
+
+## Command completion
+
+Custom completions now receive the text before the cursor in the correct field,
+preserving trailing text when editing a command. Argument suggestions replace only
+the last word even when the client dispatcher does not recognize a server command.
+Tests cover these cases, retaining existing root suggestions and falling back to
+vanilla when no custom suggestion matches. This does not validate live server
+suggestions or physical Tab key handling in a running client.
 
 API references used for the port:
 

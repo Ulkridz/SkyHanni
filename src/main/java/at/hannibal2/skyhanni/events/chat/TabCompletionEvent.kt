@@ -1,6 +1,8 @@
 package at.hannibal2.skyhanni.events.chat
 
 import at.hannibal2.skyhanni.api.event.SkyHanniEvent
+import com.mojang.brigadier.suggestion.Suggestions
+import com.mojang.brigadier.suggestion.SuggestionsBuilder
 
 class TabCompletionEvent(
     val leftOfCursor: String,
@@ -40,5 +42,21 @@ class TabCompletionEvent(
     fun intoSuggestionArray(): Array<String>? {
         if (additionalSuggestions.isEmpty()) return null
         return (originalCompletions + additionalSuggestions).toTypedArray()
+    }
+
+    fun buildSuggestions(start: Int): Suggestions? {
+        val suggestions = intoSuggestionArray() ?: return null
+        // Hypixel commands can be unknown to the client dispatcher. Its parse start
+        // then points to the command itself, even when completing an argument.
+        val replacementStart = maxOf(start, leftOfCursor.lastIndexOf(' ') + 1)
+        val builder = SuggestionsBuilder(leftOfCursor, replacementStart)
+        suggestions.forEach { builder.suggest(it) }
+        return builder.build()
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromInput(input: String, cursor: Int, originalCompletions: List<String>): TabCompletionEvent =
+            TabCompletionEvent(input.substring(0, cursor), input, originalCompletions)
     }
 }
