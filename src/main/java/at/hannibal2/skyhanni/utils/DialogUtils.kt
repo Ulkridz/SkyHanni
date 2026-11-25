@@ -7,7 +7,9 @@ import at.hannibal2.skyhanni.config.commands.CommandRegistrationEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.coroutines.CoroutineSettings
+//? if < 26.3 {
 import org.lwjgl.util.tinyfd.TinyFileDialogs
+//?}
 import kotlin.time.Duration
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.sync.Mutex
@@ -41,7 +43,11 @@ object DialogUtils {
      * The backend the query selected, e.g. `applescript` or `basicinput` for the console fallback.
      * Only meaningful directly after a call, so it is read while still holding [dialogMutex].
      */
+    //? if >= 26.3 {
+    /*private fun currentBackend(): String = "SDL"
+    *///?} else {
     private fun currentBackend(): String? = TinyFileDialogs.tinyfd_getGlobalChar("tinyfd_response")
+    //?}
 
     /**
      * Opens a modal message box outside the game window.
@@ -82,7 +88,16 @@ object DialogUtils {
     private fun String.stripForbiddenChars(): String = filterNot { it in forbiddenCharacters }
 
     private fun messageBox(title: String, message: String): Boolean {
+        //? if >= 26.3 {
+        /*if (title == QUERY_TITLE) {
+            return org.lwjgl.sdl.SDLInit.SDL_WasInit(org.lwjgl.sdl.SDLInit.SDL_INIT_VIDEO) != 0
+        }
+        return org.lwjgl.sdl.SDLMessageBox.SDL_ShowSimpleMessageBox(
+            org.lwjgl.sdl.SDLMessageBox.SDL_MESSAGEBOX_INFORMATION, title, message, 0L,
+        )
+        *///?} else {
         return TinyFileDialogs.tinyfd_messageBox(title, message, "ok", "info", 1) != 0
+        //?}
     }
 
     @HandleEvent

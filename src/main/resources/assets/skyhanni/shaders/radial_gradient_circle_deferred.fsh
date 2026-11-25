@@ -1,13 +1,22 @@
+//~ if >= 26.3 '150' -> '330'
 #version 150
+//? if >= 26.3
+//#extension GL_ARB_separate_shader_objects : require
 
 const float tau = 6.2831853f;
 
+//~ if >= 26.3 'in vec4 roundedParams0;' -> 'layout(location = 0) in vec4 roundedParams0;'
 in vec4 roundedParams0;
+//~ if >= 26.3 'in vec4 roundedParams1;' -> 'layout(location = 1) in vec4 roundedParams1;'
 in vec4 roundedParams1;
+//~ if >= 26.3 'in vec4 gradientParams0;' -> 'layout(location = 2) in vec4 gradientParams0;'
 in vec4 gradientParams0;
+//~ if >= 26.3 'in vec4 gradientParams1;' -> 'layout(location = 3) in vec4 gradientParams1;'
 in vec4 gradientParams1;
+//~ if >= 26.3 'in vec4 gradientParams2;' -> 'layout(location = 4) in vec4 gradientParams2;'
 in vec4 gradientParams2;
 
+//~ if >= 26.3 'out vec4 fragColor;' -> 'layout(location = 0) out vec4 fragColor;'
 out vec4 fragColor;
 
 void main() {

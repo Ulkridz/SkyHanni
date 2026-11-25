@@ -27,7 +27,9 @@ public abstract class MixinClientLevel {
         }
     }
 
+    //~ if >= 26.3 'addBreakingBlockEffect' -> 'addBreakingParticles'
     @Inject(method = "addBreakingBlockEffect", at = @At("HEAD"), cancellable = true)
+    //~ if >= 26.3 'Direction direction, CallbackInfo' -> 'Direction direction, BlockState state, CallbackInfo'
     private void onAddBlockBreakingParticles(BlockPos blockPos, Direction direction, CallbackInfo ci) {
         if (ParticleHider.shouldHideBlockParticles()) {
             ci.cancel();

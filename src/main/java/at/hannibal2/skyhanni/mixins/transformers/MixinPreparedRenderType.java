@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PreparedRenderType.class)
 public abstract class MixinPreparedRenderType {
     @Inject(
+        //~ if >= 26.3 'drawFromBuffer(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;III)V' -> 'draw'
         method = "drawFromBuffer(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;III)V",
         at = @At(
             value = "INVOKE",
@@ -23,6 +24,12 @@ public abstract class MixinPreparedRenderType {
         )
     )
     private void bindSkyHanniChromaUniform(
+        //? if >= 26.3 {
+        /*net.minecraft.client.renderer.StagedVertexBuffer.ExecuteInfo executeInfo,
+        RenderPass renderPass,
+        com.mojang.renderpearl.api.pipeline.RenderPipeline pipeline,
+        CallbackInfo ci
+        *///?} else {
         GpuBuffer vertexBuffer,
         GpuBuffer indexBuffer,
         IndexType indexType,
@@ -31,6 +38,7 @@ public abstract class MixinPreparedRenderType {
         int indexCount,
         CallbackInfo ci,
         @Local RenderPass renderPass
+        //?}
     ) {
         PreparedRenderType renderType = (PreparedRenderType) (Object) this;
         GuiRendererHook.INSTANCE.insertChromaSetUniform(renderPass, renderType.pipeline());

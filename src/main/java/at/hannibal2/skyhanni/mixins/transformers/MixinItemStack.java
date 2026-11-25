@@ -33,6 +33,7 @@ public abstract class MixinItemStack {
     }
 
     @Inject(method = "addToTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/TooltipProvider;addToTooltip(Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;Lnet/minecraft/core/component/DataComponentGetter;)V"), cancellable = true)
+    //~ if >= 26.3 'componentType, TooltipContext' -> 'componentType, TooltipProvider.Getter<T> getter, TooltipContext'
     public <T extends TooltipProvider> void blockVanillaEnchants(DataComponentType<T> componentType, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type, CallbackInfo ci) {
         if (SkyBlockUtils.getInSkyBlock() && SkyHanniMod.feature.getInventory().getEnchantParsing().getHideVanillaEnchants().get() && componentType == DataComponents.ENCHANTMENTS) {
             ci.cancel();

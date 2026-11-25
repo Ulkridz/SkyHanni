@@ -1,11 +1,18 @@
+//~ if >= 26.3 '150' -> '330'
 #version 150
+//? if >= 26.3
+//#extension GL_ARB_separate_shader_objects : require
 
+//~ if >= 26.3 'in vec2 texCoord;' -> 'layout(location = 0) in vec2 texCoord;'
 in vec2 texCoord;
+//~ if >= 26.3 'in vec4 roundedParams0;' -> 'layout(location = 1) in vec4 roundedParams0;'
 in vec4 roundedParams0;
+//~ if >= 26.3 'in vec4 roundedParams1;' -> 'layout(location = 2) in vec4 roundedParams1;'
 in vec4 roundedParams1;
 
 uniform sampler2D Sampler0;
 
+//~ if >= 26.3 'out vec4 outColor;' -> 'layout(location = 0) out vec4 outColor;'
 out vec4 outColor;
 
 float roundedRectSDF(vec2 center, vec2 halfSize, float radius) {

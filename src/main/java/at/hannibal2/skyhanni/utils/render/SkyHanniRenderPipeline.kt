@@ -165,7 +165,11 @@ enum class SkyHanniRenderPipeline(
                 if (sampler != null || uniforms.isNotEmpty()) {
                     withBindGroupLayout(
                         BindGroupLayout.builder().apply {
+                            //? if >= 26.3 {
+                            /*sampler?.let { withUniform(it, UniformType.COMBINED_IMAGE_SAMPLER) }
+                            *///?} else {
                             sampler?.let(this::withSampler)
+                            //?}
                             uniforms.forEach(this::withUniform)
                         }.build(),
                     )

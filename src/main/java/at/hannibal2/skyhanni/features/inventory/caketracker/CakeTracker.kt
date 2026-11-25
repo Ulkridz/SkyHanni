@@ -41,10 +41,10 @@ import at.hannibal2.skyhanni.utils.renderables.primitives.text
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import io.github.notenoughupdates.moulconfig.ChromaColour
 import net.minecraft.world.inventory.ChestMenu
-import org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN
-import org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT
-import org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT
-import org.lwjgl.glfw.GLFW.GLFW_KEY_UP
+import com.mojang.blaze3d.platform.InputConstants.KEY_DOWN
+import com.mojang.blaze3d.platform.InputConstants.KEY_LEFT
+import com.mojang.blaze3d.platform.InputConstants.KEY_RIGHT
+import com.mojang.blaze3d.platform.InputConstants.KEY_UP
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
@@ -353,10 +353,10 @@ object CakeTracker {
                     renderable,
                     tips = getPriceHoverTooltip(displayType, colorCode),
                     onAnyClick = mapOf(
-                        GLFW_KEY_LEFT to { changeSelectedSingular(-1) },
-                        GLFW_KEY_UP to { changeSelectedSingular(-1) },
-                        GLFW_KEY_RIGHT to { changeSelectedSingular(1) },
-                        GLFW_KEY_DOWN to { changeSelectedSingular(1) },
+                        KEY_LEFT to { changeSelectedSingular(-1) },
+                        KEY_UP to { changeSelectedSingular(-1) },
+                        KEY_RIGHT to { changeSelectedSingular(1) },
+                        KEY_DOWN to { changeSelectedSingular(1) },
                         LEFT_MOUSE to { HypixelCommands.auctionSearch("New Year Cake (Year $selectedSingular)") },
                     ),
                 )

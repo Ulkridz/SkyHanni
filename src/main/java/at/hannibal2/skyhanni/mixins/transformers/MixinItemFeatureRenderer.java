@@ -49,7 +49,12 @@ public abstract class MixinItemFeatureRenderer {
     private RenderType modifyRenderLayer(RenderType layer) {
         if (EntityRenderDispatcherHookKt.getEntity() instanceof LivingEntity livingEntity) {
             if (EntityTransparencyManager.getEntityTransparency(livingEntity) == null) return layer;
+            //? if >= 26.3 {
+            /*var texture = layer.state.textures.get("Sampler0");
+            return texture == null ? layer : RenderTypes.itemTranslucent(texture.location);
+            *///?} else {
             return RenderTypes.glintTranslucent();
+            //?}
         }
         return layer;
     }

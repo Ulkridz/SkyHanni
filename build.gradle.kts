@@ -192,12 +192,13 @@ dependencies {
     "productionRuntimeMods"(libs.devauth)
 
     val moulconfigVersion = target.minecraftVersion.moulconfigMinecraftVersionOverride ?: target.minecraftVersion.versionName
-    shadowImpl("org.notenoughupdates.moulconfig:modern-$moulconfigVersion:${libs.versions.moulconfig.get()}") {
+    val moulconfigRelease = if (target == ProjectTarget.MODERN_26300) "4.8.0" else libs.versions.moulconfig.get()
+    shadowImpl("org.notenoughupdates.moulconfig:modern-$moulconfigVersion:$moulconfigRelease") {
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.kotlinx")
     }
     "minecraftTestClientRuntimeLibraries"(
-        "org.notenoughupdates.moulconfig:modern-$moulconfigVersion:${libs.versions.moulconfig.get()}"
+        "org.notenoughupdates.moulconfig:modern-$moulconfigVersion:$moulconfigRelease"
     )
 
     shadowImpl(libs.libautoupdate) {
@@ -215,6 +216,7 @@ dependencies {
     "productionRuntimeMods"(target.hypixelModApiFabricVersion)
 
     val reiVersion = when (target) {
+        ProjectTarget.MODERN_26300 -> "26.3.824"
         ProjectTarget.MODERN_26200 -> "26.2.820"
         ProjectTarget.MODERN_26100 -> "26.1.819"
     }

@@ -36,7 +36,9 @@ accessible field net/minecraft/client/renderer/RenderPipelines GUI_SNIPPET Lcom/
 accessible field net/minecraft/client/renderer/RenderPipelines LINES_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible field net/minecraft/client/renderer/RenderPipelines TEXT_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible field net/minecraft/client/renderer/rendertype/RenderSetup layeringTransform Lnet/minecraft/client/renderer/rendertype/LayeringTransform;
+#? if < 26.3 {
 accessible field net/minecraft/client/renderer/rendertype/RenderSetup outputTarget Lnet/minecraft/client/renderer/rendertype/OutputTarget;
+#?}
 accessible field net/minecraft/client/renderer/rendertype/RenderSetup pipeline Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 accessible field net/minecraft/client/renderer/rendertype/RenderSetup textures Ljava/util/Map;
 accessible field net/minecraft/client/renderer/rendertype/RenderSetup$TextureBinding location Lnet/minecraft/resources/Identifier;

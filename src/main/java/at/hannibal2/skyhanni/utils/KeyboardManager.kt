@@ -139,7 +139,11 @@ object KeyboardManager {
 
         this == -1 -> false
         this in 0..5 -> MouseCompat.isButtonDown(this)
+        //? if >= 26.3 {
+        /*else -> InputConstants.isKeyDown(this)
+        *///?} else {
         else -> InputConstants.isKeyDown(Minecraft.getInstance().window, this)
+        //?}
     }
 
     private val lockedKeys = mutableSetOf<Int>()

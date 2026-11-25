@@ -36,6 +36,7 @@ public abstract class MixinClientPacketListener {
     }
 
     @WrapOperation(
+        //~ if >= 26.3 'handleParticleEvent' -> 'tryAddParticle'
         method = "handleParticleEvent",
         at = @At(
             value = "INVOKE",

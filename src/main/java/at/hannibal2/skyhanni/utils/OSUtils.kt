@@ -49,7 +49,11 @@ object OSUtils {
 
     @JvmStatic
     fun openBrowser(url: String) {
+        //? if >= 26.3 {
+        /*org.lwjgl.sdl.SDLMisc.SDL_OpenURL(url)
+        *///?} else {
         Util.getPlatform().openUri(url)
+        //?}
     }
 
     @JvmStatic

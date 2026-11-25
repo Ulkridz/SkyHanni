@@ -75,6 +75,11 @@ object WorldRenderUtils {
                 SubmitRenderPhases.AFTER_TERRAIN,
                 TextFeatureRenderer.Submit(
                     Matrix4f(matrices.last().pose()),
+                    //? if >= 26.3 {
+                    /*SEE_THROUGH,
+                    light,
+                    TextFeatureRenderer.Content.Text(x, y, text, shadow, color, backgroundColor, 0),
+                    *///?} else {
                     x,
                     y,
                     text,
@@ -84,6 +89,7 @@ object WorldRenderUtils {
                     color,
                     backgroundColor,
                     0,
+                    //?}
                 ),
             )
             //?} else {
@@ -368,6 +374,7 @@ object WorldRenderUtils {
             (location.y - cameraPos.y()).toFloat(),
             (location.z - cameraPos.z()).toFloat(),
         )
+        //~ if >= 26.3 'mulPose' -> 'rotate'
         matrices.mulPose(camera.rotation())
         matrices.translate(0f, -yOffset * adjustedScale, 0f)
         matrices.scale(adjustedScale, -adjustedScale, adjustedScale)
